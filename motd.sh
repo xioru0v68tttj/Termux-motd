@@ -5,13 +5,16 @@
 # ~/.termux/motd.sh
 # this file is called by $PREFIX/bin/login
 
-# User-configurable graph color-threshold formulas (Android 10+):
+# User-configurable level indicator color-threshold formulas (Android 10+):
 STORAGE_YELLOW='(( $free < 5242880 ))'
 STORAGE_RED='(( $free < 1048576 ))'
 MEMORY_YELLOW='(( $pct >= 50 ))'
 MEMORY_RED='(( $pct > 70 ))'
 BATTERY_YELLOW='(( ${battery[percentage]} < 30 ))'
 BATTERY_RED='(( ${battery[percentage]} < 10 ))'
+
+# User-configurable level indicator size
+GRAPH_SIZE=14
 
 # Read background color
 background_color=$(grep '^background=' "$HOME/.termux/colors.properties" | cut -d'#' -f2)
@@ -28,7 +31,7 @@ if [ -n "$background_color" ] && [ ${#background_color} -eq 6 ]; then
 	brightness=$(( (r*299+g*587+b*114)/1000 ))
 	
 	# Store true if background is light (use dark text), false if background is dark (use light text)
-	if [ $brightness -gt 128 ]; then
+	if [ $brightness -ge 128 ]; then
 		use_dark_text=1  # Light background → use dark text
 	else
 		use_dark_text=0 # Dark background → use light text
@@ -95,11 +98,6 @@ else # dark backbround=light text
 	fi
 fi
 
-# Contrast graph against background
-if (( $use_dark_text )); then
-	colors=(white black red blue orange yellow green purple brown)
-fi
-
 declare -A square
 for i in "${!colors[@]}"; do
 	square["${colors[i]}"]="${chars[i]}"
@@ -161,7 +159,7 @@ Graph() {
 	local pct=$1
 	local yellow=$2
 	local red=$3
-	local size=14
+	local size=$GRAPH_SIZE
 	local empty=${square[black]}
 	local block=${square[white]}
 	
