@@ -77,8 +77,10 @@ Download [motd.sh](https://raw.githubusercontent.com/xioru0v68tttj/Termux-motd/m
 
 Or,
 
+```
 cd ~/.termux
 curl -O https://raw.githubusercontent.com/xioru0v68tttj/Termux-motd/main/motd.sh
+```
 
 On next login, the MOTD will display automatically.
 
